@@ -1,7 +1,5 @@
-
 // write your code here
 // console.log(weather["paris"].temp);
-
 
 let apiKey = "5863935ee9cca4c02ed68203f807c65b";
 let units = "metric";
@@ -16,16 +14,8 @@ const humiditityElement = document.getElementById("humiditity");
 const windElement = document.getElementById("wind");
 const descriptionElement = document.getElementById("description");
 const dateElement = document.getElementById("date");
+const iconElement = document.getElementById("icon");
 
-
-// function searchCity(cityName, cities) {
-//   if (cityName in cities) {
-//   } else {
-//     alert(
-//       `Sorry, we don't know the weather for this city, try going to https://www.google.com/search?q=weather+${name}`
-//     );
-//   }
-// }
 function displayInfoCity(event) {
   event.preventDefault();
   const cityInput = document.getElementById("cityInput");
@@ -53,7 +43,8 @@ function displayTemperature(response) {
   let getHumiditity = infoCity.main.humidity;
   let getWind = infoCity.wind.speed;
   let getDescription = infoCity.weather[0].description;
-  let getData=infoCity.dt;
+  let getData = infoCity.dt;
+  let getIcon = infoCity.weather[0].icon;
   console.log(infoCity);
   cityNameElement.innerHTML = getCityName;
   tempElement.innerHTML = `${getTemp}°C`;
@@ -61,11 +52,15 @@ function displayTemperature(response) {
   humiditityElement.innerHTML = getHumiditity;
   windElement.innerHTML = getWind;
   descriptionElement.innerHTML = getDescription;
-  dateElement.innerHTML = formatDate(getData*1000);
-
+  dateElement.innerHTML = formatDate(getData * 1000);
+  iconElement.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${getIcon}@2x.png`
+  );
+  iconElement.setAttribute("alt",getDescription);
 }
 
-function formatDate(timestamp){
+function formatDate(timestamp) {
   const date = new Date();
   const dayNames = [
     "Sunday",
@@ -85,31 +80,10 @@ function formatDate(timestamp){
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
-    const dayName = dayNames[day];
+  const dayName = dayNames[day];
 
   return `${dayName} ${hours}:${minutes}`;
 }
-
-// function formatTime(date) {
-//   let hours = date.getHours();
-//   if (hours < 10) {
-//     hours = `0${hours}`;
-//   }
-//   let minutes = date.getMinutes();
-//   if (minutes < 10) {
-//     minutes = `0${minutes}`;
-//   }
-//   return `${hours}:${minutes}`;
-// }
-
-// function showTime() {
-//   const date = new Date();
-//   const day = date.getDay();
-//   const dayName = dayNames[day];
-  
-//   dateElement.innerHTML = dayName;
-//   timeElement.innerHTML = formatTime(date);
-// }
 
 let isCelesium = true;
 function converteToCelesium(event) {
@@ -128,7 +102,8 @@ function displayTemp() {
   if (isCelesium) {
     tempElement.innerHTML = tempwithCelesium;
   } else {
-    const tempWithFarenhiet = (parseInt(tempElement.innerHTML) * 9) / 5 + 32 + "°F";
+    const tempWithFarenhiet =
+      (parseInt(tempElement.innerHTML) * 9) / 5 + 32 + "°F";
     tempElement.innerHTML = tempWithFarenhiet;
   }
 }
