@@ -5,7 +5,7 @@ let apiKey = "5863935ee9cca4c02ed68203f807c65b";
 let units = "metric";
 const searchBtn = document.getElementById("search");
 const tempElement = document.getElementById("temperature");
-let tempwithCelesium = tempElement.innerHTML;
+let tempwithCelesium = null;
 const changeToFarenheit = document.getElementById("fahrenheit");
 const changeToCelsius = document.getElementById("celsius");
 const cityNameElement = document.getElementById("city-name");
@@ -45,9 +45,10 @@ function displayTemperature(response) {
   let getDescription = infoCity.weather[0].description;
   let getData = infoCity.dt;
   let getIcon = infoCity.weather[0].icon;
+  tempwithCelesium = getTemp;
   console.log(infoCity);
   cityNameElement.innerHTML = getCityName;
-  tempElement.innerHTML = `${getTemp}°C`;
+  tempElement.innerHTML = getTemp;
   tempwithCelesium = tempElement.innerHTML;
   humiditityElement.innerHTML = getHumiditity;
   windElement.innerHTML = getWind;
@@ -57,7 +58,7 @@ function displayTemperature(response) {
     "src",
     `https://openweathermap.org/img/wn/${getIcon}@2x.png`
   );
-  iconElement.setAttribute("alt",getDescription);
+  iconElement.setAttribute("alt", getDescription);
 }
 
 function formatDate(timestamp) {
@@ -88,27 +89,18 @@ function formatDate(timestamp) {
 let isCelesium = true;
 function converteToCelesium(event) {
   event.preventDefault();
-  isCelesium = true;
-  displayTemp();
+  changeToCelsius.classList.add("active");
+  changeToFarenheit.classList.remove("active");
+  tempElement.innerHTML = tempwithCelesium;
 }
 
 function converteToFarenheit(event) {
   event.preventDefault();
-  isCelesium = false;
-  displayTemp();
+  changeToCelsius.classList.remove("active");
+  changeToFarenheit.classList.add("active");
+  const tempWithFarenhiet = (parseInt(tempwithCelesium) * 9) / 5 + 32;
+  tempElement.innerHTML = tempWithFarenhiet;
 }
-
-function displayTemp() {
-  if (isCelesium) {
-    tempElement.innerHTML = tempwithCelesium;
-  } else {
-    const tempWithFarenhiet =
-      (parseInt(tempElement.innerHTML) * 9) / 5 + 32 + "°F";
-    tempElement.innerHTML = tempWithFarenhiet;
-  }
-}
-
-// showTime();
 
 searchBtn.addEventListener("click", displayInfoCity);
 
