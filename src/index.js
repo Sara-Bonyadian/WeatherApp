@@ -1,5 +1,3 @@
-// write your code here
-// console.log(weather["paris"].temp);
 
 let apiKey = "5863935ee9cca4c02ed68203f807c65b";
 let units = "metric";
@@ -15,6 +13,7 @@ const windElement = document.getElementById("wind");
 const descriptionElement = document.getElementById("description");
 const dateElement = document.getElementById("date");
 const iconElement = document.getElementById("icon");
+const forcastPart = document.getElementById("forcast");
 
 function displayInfoCity(event) {
   event.preventDefault();
@@ -34,6 +33,13 @@ function showCurrentTemp(position) {
   let longitude = position.coords.longitude;
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayTemperature);
+}
+
+function getForcast(coordinate) {
+  let lat = coordinate.lat;
+  let lon = coordinate.lon;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForcast);
 }
 
 function displayTemperature(response) {
@@ -59,6 +65,7 @@ function displayTemperature(response) {
     `https://openweathermap.org/img/wn/${getIcon}@2x.png`
   );
   iconElement.setAttribute("alt", getDescription);
+  getForcast(infoCity.coord);
 }
 
 function formatDate(timestamp) {
@@ -86,7 +93,6 @@ function formatDate(timestamp) {
   return `${dayName} ${hours}:${minutes}`;
 }
 
-let isCelesium = true;
 function converteToCelesium(event) {
   event.preventDefault();
   changeToCelsius.classList.add("active");
@@ -102,6 +108,26 @@ function converteToFarenheit(event) {
   tempElement.innerHTML = tempWithFarenhiet;
 }
 
+function displayForcast(response) {
+  console.log(response.data.daily);
+  let forcastHTML = `<div class="row">`;
+  let days = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"];
+  days.forEach(function (day) {
+    forcastHTML =
+      forcastHTML +
+      `<div class="col-2">
+            <div class="weather-forcast-day">${day}</div>
+            <img src="" alt="" srcset="" class="weather-forcast-icon">
+            <div class="westher-forcast-temp"> 
+            <span class="weather-forcast-max-temp">13</span>
+            <span class="weather-forcast-min-temp">12</span>
+            </div>
+          </div>`;
+  });
+
+  forcastHTML = forcastHTML + `</div>`;
+  forcastPart.innerHTML = forcastHTML;
+}
 searchBtn.addEventListener("click", displayInfoCity);
 
 currentBtn.addEventListener("click", displayCurrentTemp);
@@ -109,3 +135,4 @@ currentBtn.addEventListener("click", displayCurrentTemp);
 changeToFarenheit.addEventListener("click", converteToFarenheit);
 
 changeToCelsius.addEventListener("click", converteToCelesium);
+displayForcast();

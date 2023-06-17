@@ -64,3 +64,17 @@ h3 {
 #source{
   margin:0 auto;
 }
+.weather-forcast{
+  margin-top: 20px;
+  text-align: center;
+}
+.weather-forcast-day{
+  opacity: 0.7;
+}
+
+.weather-forcast-icon{
+  font-size: 1em;
+}
+.weather-forcast-min-temp{
+  opacity: 0.6;
+}
