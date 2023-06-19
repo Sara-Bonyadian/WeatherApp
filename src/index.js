@@ -1,4 +1,3 @@
-
 let apiKey = "5863935ee9cca4c02ed68203f807c65b";
 let units = "metric";
 const searchBtn = document.getElementById("search");
@@ -69,7 +68,7 @@ function displayTemperature(response) {
 }
 
 function formatDate(timestamp) {
-  const date = new Date();
+  const date = new Date(timestamp);
   const dayNames = [
     "Sunday",
     "Monday",
@@ -92,6 +91,13 @@ function formatDate(timestamp) {
 
   return `${dayName} ${hours}:${minutes}`;
 }
+function formatDay(timestamp) {
+  let days = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"];
+  let date = new Date(timestamp);
+  const day = date.getDay();
+  const dayName = days[day];
+  return `${dayName}`;
+}
 
 function converteToCelesium(event) {
   event.preventDefault();
@@ -110,17 +116,23 @@ function converteToFarenheit(event) {
 
 function displayForcast(response) {
   console.log(response.data.daily);
+  let forcast = response.data.daily;
   let forcastHTML = `<div class="row">`;
-  let days = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"];
-  days.forEach(function (day) {
+
+  forcast.forEach(function (forcastDay) {
+    let day = forcastDay.dt * 1000;
+    let maxTemp = Math.round(forcastDay.temp.max);
+    let minTemp = Math.round(forcastDay.temp.min);
+    let icon = forcastDay.weather[0].icon;
+
     forcastHTML =
       forcastHTML +
       `<div class="col-2">
-            <div class="weather-forcast-day">${day}</div>
-            <img src="" alt="" srcset="" class="weather-forcast-icon">
+            <div class="weather-forcast-day">${formatDay(day)}</div>
+            <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="" class="weather-forcast-icon">
             <div class="westher-forcast-temp"> 
-            <span class="weather-forcast-max-temp">13</span>
-            <span class="weather-forcast-min-temp">12</span>
+            <span class="weather-forcast-max-temp">${maxTemp}</span>
+            <span class="weather-forcast-min-temp">\t\t${minTemp}</span>
             </div>
           </div>`;
   });
@@ -135,4 +147,3 @@ currentBtn.addEventListener("click", displayCurrentTemp);
 changeToFarenheit.addEventListener("click", converteToFarenheit);
 
 changeToCelsius.addEventListener("click", converteToCelesium);
-displayForcast();
