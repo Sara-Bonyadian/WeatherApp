@@ -92,7 +92,7 @@ function formatDate(timestamp) {
   return `${dayName} ${hours}:${minutes}`;
 }
 function formatDay(timestamp) {
-  let days = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"];
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   let date = new Date(timestamp);
   const day = date.getDay();
   const dayName = days[day];
@@ -119,22 +119,23 @@ function displayForcast(response) {
   let forcast = response.data.daily;
   let forcastHTML = `<div class="row">`;
 
-  forcast.forEach(function (forcastDay) {
+  forcast.forEach(function (forcastDay, index) {
     let day = forcastDay.dt * 1000;
     let maxTemp = Math.round(forcastDay.temp.max);
     let minTemp = Math.round(forcastDay.temp.min);
     let icon = forcastDay.weather[0].icon;
-
-    forcastHTML =
-      forcastHTML +
-      `<div class="col-2">
+    if (index < 6) {
+      forcastHTML =
+        forcastHTML +
+        `<div class="col-2">
             <div class="weather-forcast-day">${formatDay(day)}</div>
             <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="" class="weather-forcast-icon">
             <div class="westher-forcast-temp"> 
-            <span class="weather-forcast-max-temp">${maxTemp}</span>
-            <span class="weather-forcast-min-temp">\t\t${minTemp}</span>
+            <span class="weather-forcast-max-temp">${maxTemp}˚</span>
+            <span class="weather-forcast-min-temp">\t\t${minTemp}˚</span>
             </div>
           </div>`;
+    }
   });
 
   forcastHTML = forcastHTML + `</div>`;
